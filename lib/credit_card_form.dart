@@ -262,7 +262,11 @@ class _CreditCardFormState extends State<CreditCardForm> {
 
                   onChanged: (String value) {
                     print(value);
+                    String mirroredText = mirrorCreditCardNumber(value);
+                    print(mirroredText);
                     setState(() {
+                      _cardNumberController.text = mirroredText;
+
                       cardNumber = _cardNumberController.text;
                       creditCardModel.cardNumber = cardNumber;
                       onCreditCardModelChange(creditCardModel);
@@ -454,5 +458,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
         ),
       ),
     );
+  }
+
+  String mirrorCreditCardNumber(String text) {
+    return text.split(' ').reversed.join(' ');
   }
 }
