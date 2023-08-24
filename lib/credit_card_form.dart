@@ -258,6 +258,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   key: widget.cardNumberKey,
                   obscureText: widget.obscureNumber,
                   controller: _cardNumberController,
+                  textAlign: TextAlign.left, // Aligns text to the left
+
                   onChanged: (String value) {
                     setState(() {
                       cardNumber = _cardNumberController.text;
@@ -301,6 +303,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
                           const EdgeInsets.only(left: 16, top: 8, right: 16),
                       child: TextFormField(
                         key: widget.expiryDateKey,
+                        textAlign: TextAlign.left, // Aligns text to the left
+
                         controller: _expiryDateController,
                         onChanged: (String value) {
                           if (_expiryDateController.text
@@ -365,6 +369,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
                       child: TextFormField(
                         key: widget.cvvCodeKey,
                         obscureText: widget.obscureCvv,
+                        textAlign: TextAlign.left, // Aligns text to the left
+
                         focusNode: cvvFocusNode,
                         controller: _cvvCodeController,
                         cursorColor: widget.cursorColor ?? themeColor,
@@ -416,6 +422,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 child: TextFormField(
                   key: widget.cardHolderKey,
                   controller: _cardHolderNameController,
+                  textAlign: TextAlign.left, // Aligns text to the left
+
                   onChanged: (String value) {
                     setState(() {
                       cardHolderName = _cardHolderNameController.text;

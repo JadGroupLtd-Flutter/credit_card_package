@@ -16,4 +16,6 @@ class CreditCardModel {
 
   /// A boolean for indicating if cvv is focused or not.
   bool isCvvFocused = false;
+
+  int noOfPayments = 1;
 }
