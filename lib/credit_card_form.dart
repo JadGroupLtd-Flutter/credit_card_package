@@ -261,6 +261,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   textAlign: TextAlign.left, // Aligns text to the left
 
                   onChanged: (String value) {
+                    print(value);
                     setState(() {
                       cardNumber = _cardNumberController.text;
                       creditCardModel.cardNumber = cardNumber;
