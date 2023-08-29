@@ -1,6 +1,7 @@
 import 'package:credit_card_package/credit_card_model.dart';
 import 'package:credit_card_package/credit_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class CreditCardForm extends StatefulWidget {
   const CreditCardForm({
@@ -15,6 +16,7 @@ class CreditCardForm extends StatefulWidget {
     required this.themeColor,
     this.textColor = Colors.black,
     this.cursorColor,
+    required this.errorLangMessage,
     this.cardHolderDecoration = const InputDecoration(
       labelText: 'Card holder',
     ),
@@ -83,6 +85,7 @@ class CreditCardForm extends StatefulWidget {
 
   /// Cursor color in the credit card form.
   final Color? cursorColor;
+  final String errorLangMessage;
 
   /// When enabled cvv gets hidden with obscuring characters. Defaults to
   /// false.
@@ -192,6 +195,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
   FocusNode cvvFocusNode = FocusNode();
   FocusNode expiryDateNode = FocusNode();
   FocusNode cardHolderNode = FocusNode();
+  bool isKeyboardVisible = false;
 
   void textFieldFocusDidChange() {
     creditCardModel.isCvvFocused = cvvFocusNode.hasFocus;
@@ -222,6 +226,12 @@ class _CreditCardFormState extends State<CreditCardForm> {
     onCreditCardModelChange = widget.onCreditCardModelChange;
 
     cvvFocusNode.addListener(textFieldFocusDidChange);
+
+    KeyboardVisibilityController().onChange.listen((bool visible) {
+      setState(() {
+        isKeyboardVisible = visible;
+      });
+    });
   }
 
   @override
@@ -236,6 +246,31 @@ class _CreditCardFormState extends State<CreditCardForm> {
   void didChangeDependencies() {
     themeColor = widget.themeColor;
     super.didChangeDependencies();
+  }
+
+  bool isEnglish(String text) {
+    // Check if the text contains only ASCII characters, which might indicate English
+    for (int i = 0; i < text.length; i++) {
+      if (text.codeUnitAt(i) > 127) {
+        return false; // Contains non-ASCII character
+      }
+    }
+    return true; // Contains only ASCII characters (potential English)
+  }
+
+  void showLanguageToast(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        )
+        .closed
+        .then((value) {
+      if (context.mounted) ScaffoldMessenger.of(context).clearSnackBars();
+    });
   }
 
   @override
@@ -261,13 +296,16 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   textAlign: TextAlign.left, // Aligns text to the left
                   textDirection: TextDirection.ltr,
                   onChanged: (String value) {
-                    print(value);
-                    setState(() {
-                      cardNumber = _cardNumberController.text;
+                    if (isKeyboardVisible && !isEnglish(value)) {
+                      showLanguageToast(widget.errorLangMessage);
+                    } else {
+                      setState(() {
+                        cardNumber = _cardNumberController.text;
 
-                      creditCardModel.cardNumber = cardNumber;
-                      onCreditCardModelChange(creditCardModel);
-                    });
+                        creditCardModel.cardNumber = cardNumber;
+                        onCreditCardModelChange(creditCardModel);
+                      });
+                    }
                   },
                   cursorColor: widget.cursorColor ?? themeColor,
                   onEditingComplete: () {
@@ -309,16 +347,20 @@ class _CreditCardFormState extends State<CreditCardForm> {
                         textDirection: TextDirection.ltr,
                         controller: _expiryDateController,
                         onChanged: (String value) {
-                          if (_expiryDateController.text
-                              .startsWith(RegExp('[2-9]'))) {
-                            _expiryDateController.text =
-                                '0' + _expiryDateController.text;
+                          if (isKeyboardVisible && !isEnglish(value)) {
+                            showLanguageToast(widget.errorLangMessage);
+                          } else {
+                            if (_expiryDateController.text
+                                .startsWith(RegExp('[2-9]'))) {
+                              _expiryDateController.text =
+                                  '0' + _expiryDateController.text;
+                            }
+                            setState(() {
+                              expiryDate = _expiryDateController.text;
+                              creditCardModel.expiryDate = expiryDate;
+                              onCreditCardModelChange(creditCardModel);
+                            });
                           }
-                          setState(() {
-                            expiryDate = _expiryDateController.text;
-                            creditCardModel.expiryDate = expiryDate;
-                            onCreditCardModelChange(creditCardModel);
-                          });
                         },
                         cursorColor: widget.cursorColor ?? themeColor,
                         focusNode: expiryDateNode,
@@ -397,11 +439,15 @@ class _CreditCardFormState extends State<CreditCardForm> {
                           AutofillHints.creditCardSecurityCode
                         ],
                         onChanged: (String text) {
-                          setState(() {
-                            cvvCode = text;
-                            creditCardModel.cvvCode = cvvCode;
-                            onCreditCardModelChange(creditCardModel);
-                          });
+                          if (isKeyboardVisible && !isEnglish(text)) {
+                            showLanguageToast(widget.errorLangMessage);
+                          } else {
+                            setState(() {
+                              cvvCode = text;
+                              creditCardModel.cvvCode = cvvCode;
+                              onCreditCardModelChange(creditCardModel);
+                            });
+                          }
                         },
                         validator: widget.cvvValidator ??
                             (String? value) {
@@ -427,11 +473,15 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   textAlign: TextAlign.left, // Aligns text to the left
                   textDirection: TextDirection.ltr,
                   onChanged: (String value) {
-                    setState(() {
-                      cardHolderName = _cardHolderNameController.text;
-                      creditCardModel.cardHolderName = cardHolderName;
-                      onCreditCardModelChange(creditCardModel);
-                    });
+                    if (isKeyboardVisible && !isEnglish(value)) {
+                      showLanguageToast(widget.errorLangMessage);
+                    } else {
+                      setState(() {
+                        cardHolderName = _cardHolderNameController.text;
+                        creditCardModel.cardHolderName = cardHolderName;
+                        onCreditCardModelChange(creditCardModel);
+                      });
+                    }
                   },
                   cursorColor: widget.cursorColor ?? themeColor,
                   focusNode: cardHolderNode,
