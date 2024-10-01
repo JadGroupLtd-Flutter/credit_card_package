@@ -51,6 +51,9 @@ class CreditCardForm extends StatefulWidget {
     this.cardHolderValidator,
     this.onFormComplete,
     this.disableCardNumberAutoFillHints = false,
+    this.textAlign,
+    this.textDirection,
+    this.onChanged,
   }) : super(key: key);
 
   /// A string indicating card number in the text field.
@@ -156,6 +159,12 @@ class CreditCardForm extends StatefulWidget {
 
   /// A validator for card holder text field.
   final String? Function(String?)? cardHolderValidator;
+
+  final TextAlign? textAlign;
+
+  final TextDirection? textDirection;
+
+  final void Function(String)? onChanged;
 
   /// Setting this flag to true will disable autofill hints for Credit card
   /// number text field. Flutter has a bug when auto fill hints are enabled for
@@ -293,9 +302,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   key: widget.cardNumberKey,
                   obscureText: widget.obscureNumber,
                   controller: _cardNumberController,
-                  textAlign: TextAlign.left, // Aligns text to the left
-                  textDirection: TextDirection.ltr,
-                  onChanged: (String value) {
+                  textAlign: widget.textAlign ?? TextAlign.left, // Aligns text to the left
+                  textDirection: widget.textDirection ?? TextDirection.ltr,
+                  onChanged: widget.onChanged ?? (String value) {
                     if (isKeyboardVisible && !isEnglish(value)) {
                       showLanguageToast(widget.errorLangMessage);
                     } else {
