@@ -1,3 +1,4 @@
+import 'package:credit_card_package/constants.dart';
 import 'package:credit_card_package/credit_card_model.dart';
 import 'package:credit_card_package/credit_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -479,37 +480,39 @@ class _CreditCardFormState extends State<CreditCardForm> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
-                child: TextFormField(
-                  key: widget.cardHolderKey,
+                child: KeyboardInputDirectionalityAwareWidget(
                   controller: _cardHolderNameController,
-                  textAlign: widget.textAlign ?? TextAlign.left,
-                  textDirection: widget.textDirection ?? TextDirection.ltr,
-                  onChanged: widget.onChanged ?? (String value) {
-                    if (isKeyboardVisible && !isEnglish(value)) {
-                      showLanguageToast(widget.errorLangMessage);
-                    } else {
-                      setState(() {
-                        cardHolderName = _cardHolderNameController.text;
-                        creditCardModel.cardHolderName = cardHolderName;
-                        onCreditCardModelChange(creditCardModel);
-                      });
-                    }
-                  },
-                  cursorColor: widget.cursorColor ?? themeColor,
-                  focusNode: cardHolderNode,
-                  style: TextStyle(
-                    color: widget.textColor,
+                  child: TextFormField(
+                    key: widget.cardHolderKey,
+                    controller: _cardHolderNameController,
+                    textAlign: widget.textAlign ?? TextAlign.start,
+                    onChanged: widget.onChanged ?? (String value) {
+                      if (isKeyboardVisible && !isEnglish(value)) {
+                        showLanguageToast(widget.errorLangMessage);
+                      } else {
+                        setState(() {
+                          cardHolderName = _cardHolderNameController.text;
+                          creditCardModel.cardHolderName = cardHolderName;
+                          onCreditCardModelChange(creditCardModel);
+                        });
+                      }
+                    },
+                    cursorColor: widget.cursorColor ?? themeColor,
+                    focusNode: cardHolderNode,
+                    style: TextStyle(
+                      color: widget.textColor,
+                    ),
+                    decoration: widget.cardHolderDecoration,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const <String>[AutofillHints.creditCardName],
+                    onEditingComplete: () {
+                      FocusScope.of(context).unfocus();
+                      onCreditCardModelChange(creditCardModel);
+                      widget.onFormComplete?.call();
+                    },
+                    validator: widget.cardHolderValidator,
                   ),
-                  decoration: widget.cardHolderDecoration,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                  autofillHints: const <String>[AutofillHints.creditCardName],
-                  onEditingComplete: () {
-                    FocusScope.of(context).unfocus();
-                    onCreditCardModelChange(creditCardModel);
-                    widget.onFormComplete?.call();
-                  },
-                  validator: widget.cardHolderValidator,
                 ),
               ),
             ),
@@ -519,3 +522,32 @@ class _CreditCardFormState extends State<CreditCardForm> {
     );
   }
 }
+
+class KeyboardInputDirectionalityAwareWidget extends StatelessWidget {
+  const KeyboardInputDirectionalityAwareWidget({
+    required this.controller,
+    required this.child,
+    Key? key,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: controller,
+      builder: (context, value, child) {
+        final text = value.text;
+        return Directionality(
+          textDirection: text.isRTL() ? TextDirection.rtl : TextDirection.ltr,
+          child: child!,
+        );
+      },
+      child: child,
+    );
+  }
+}
+
+
+
