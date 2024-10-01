@@ -487,15 +487,11 @@ class _CreditCardFormState extends State<CreditCardForm> {
                     controller: _cardHolderNameController,
                     textAlign: widget.textAlign ?? TextAlign.start,
                     onChanged: widget.onChanged ?? (String value) {
-                      if (isKeyboardVisible && !isEnglish(value)) {
-                        showLanguageToast(widget.errorLangMessage);
-                      } else {
-                        setState(() {
-                          cardHolderName = _cardHolderNameController.text;
-                          creditCardModel.cardHolderName = cardHolderName;
-                          onCreditCardModelChange(creditCardModel);
-                        });
-                      }
+                      setState(() {
+                         cardHolderName = _cardHolderNameController.text;
+                         creditCardModel.cardHolderName = cardHolderName;
+                         onCreditCardModelChange(creditCardModel);
+                      });
                     },
                     cursorColor: widget.cursorColor ?? themeColor,
                     focusNode: cardHolderNode,
