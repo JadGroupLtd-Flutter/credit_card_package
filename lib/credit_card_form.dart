@@ -160,10 +160,13 @@ class CreditCardForm extends StatefulWidget {
   /// A validator for card holder text field.
   final String? Function(String?)? cardHolderValidator;
 
+  /// A text align to manage text alignment.
   final TextAlign? textAlign;
 
+  /// A text direction to handle typing from ltr or rtl.
   final TextDirection? textDirection;
 
+  /// A method to handle when on change.
   final void Function(String)? onChanged;
 
   /// Setting this flag to true will disable autofill hints for Credit card
