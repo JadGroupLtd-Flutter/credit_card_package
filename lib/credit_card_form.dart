@@ -305,9 +305,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
                   key: widget.cardNumberKey,
                   obscureText: widget.obscureNumber,
                   controller: _cardNumberController,
-                  textAlign: widget.textAlign ?? TextAlign.left, // Aligns text to the left
-                  textDirection: widget.textDirection ?? TextDirection.ltr,
-                  onChanged: widget.onChanged ?? (String value) {
+                  textAlign: TextAlign.left, // Aligns text to the left
+                  textDirection: TextDirection.ltr,
+                  onChanged: (String value) {
                     if (isKeyboardVisible && !isEnglish(value)) {
                       showLanguageToast(widget.errorLangMessage);
                     } else {
@@ -482,9 +482,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
                 child: TextFormField(
                   key: widget.cardHolderKey,
                   controller: _cardHolderNameController,
-                  textAlign: TextAlign.left, // Aligns text to the left
-                  textDirection: TextDirection.ltr,
-                  onChanged: (String value) {
+                  textAlign: widget.textAlign ?? TextAlign.left,
+                  textDirection: widget.textDirection ?? TextDirection.ltr,
+                  onChanged: widget.onChanged ?? (String value) {
                     if (isKeyboardVisible && !isEnglish(value)) {
                       showLanguageToast(widget.errorLangMessage);
                     } else {
