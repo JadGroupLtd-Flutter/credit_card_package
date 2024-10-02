@@ -480,35 +480,33 @@ class _CreditCardFormState extends State<CreditCardForm> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
-                child: KeyboardInputDirectionalityAwareWidget(
+                child: TextFormField(
+                  key: widget.cardHolderKey,
                   controller: _cardHolderNameController,
-                  child: TextFormField(
-                    key: widget.cardHolderKey,
-                    controller: _cardHolderNameController,
-                    textAlign: widget.textAlign ?? TextAlign.start,
-                    onChanged: widget.onChanged ?? (String value) {
-                      setState(() {
-                         cardHolderName = _cardHolderNameController.text;
-                         creditCardModel.cardHolderName = cardHolderName;
-                         onCreditCardModelChange(creditCardModel);
-                      });
-                    },
-                    cursorColor: widget.cursorColor ?? themeColor,
-                    focusNode: cardHolderNode,
-                    style: TextStyle(
-                      color: widget.textColor,
-                    ),
-                    decoration: widget.cardHolderDecoration,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.done,
-                    autofillHints: const <String>[AutofillHints.creditCardName],
-                    onEditingComplete: () {
-                      FocusScope.of(context).unfocus();
-                      onCreditCardModelChange(creditCardModel);
-                      widget.onFormComplete?.call();
-                    },
-                    validator: widget.cardHolderValidator,
+                  textAlign: widget.textAlign ?? TextAlign.start,
+                  textDirection: widget.textDirection,
+                  onChanged: widget.onChanged ?? (String value) {
+                    setState(() {
+                       cardHolderName = _cardHolderNameController.text;
+                       creditCardModel.cardHolderName = cardHolderName;
+                       onCreditCardModelChange(creditCardModel);
+                    });
+                  },
+                  cursorColor: widget.cursorColor ?? themeColor,
+                  focusNode: cardHolderNode,
+                  style: TextStyle(
+                    color: widget.textColor,
                   ),
+                  decoration: widget.cardHolderDecoration,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  autofillHints: const <String>[AutofillHints.creditCardName],
+                  onEditingComplete: () {
+                    FocusScope.of(context).unfocus();
+                    onCreditCardModelChange(creditCardModel);
+                    widget.onFormComplete?.call();
+                  },
+                  validator: widget.cardHolderValidator,
                 ),
               ),
             ),
