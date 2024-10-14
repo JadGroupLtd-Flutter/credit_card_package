@@ -517,31 +517,31 @@ class _CreditCardFormState extends State<CreditCardForm> {
   }
 }
 
-class KeyboardInputDirectionalityAwareWidget extends StatelessWidget {
-  const KeyboardInputDirectionalityAwareWidget({
-    required this.controller,
-    required this.child,
-    Key? key,
-  }) : super(key: key);
-
-  final TextEditingController controller;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<TextEditingValue>(
-      valueListenable: controller,
-      builder: (context, value, child) {
-        final text = value.text;
-        return Directionality(
-          textDirection: text.isRTL() ? TextDirection.rtl : TextDirection.ltr,
-          child: child!,
-        );
-      },
-      child: child,
-    );
-  }
-}
+// class KeyboardInputDirectionalityAwareWidget extends StatelessWidget {
+//   const KeyboardInputDirectionalityAwareWidget({
+//     required this.controller,
+//     required this.child,
+//     Key? key,
+//   }) : super(key: key);
+//
+//   final TextEditingController controller;
+//   final Widget child;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ValueListenableBuilder<TextEditingValue>(
+//       valueListenable: controller,
+//       builder: (context, value, child) {
+//         final text = value.text;
+//         return Directionality(
+//           textDirection: text.isRTL() ? TextDirection.rtl : TextDirection.ltr,
+//           child: child!,
+//         );
+//       },
+//       child: child,
+//     );
+//   }
+// }
 
 
 

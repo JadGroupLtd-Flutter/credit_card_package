@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class AppConstants {
   static const double webBreakPoint = 800;
@@ -6,8 +6,8 @@ class AppConstants {
   static const double creditCardPadding = 16;
 }
 
-extension StringExtensions on String {
-  bool isRTL() => Bidi.detectRtlDirectionality(this);
-}
+// extension StringExtensions on String {
+//   bool isRTL() => Bidi.detectRtlDirectionality(this);
+// }
 
 
